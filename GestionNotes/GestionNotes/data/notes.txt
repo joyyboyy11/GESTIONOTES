@@ -1,0 +1,9 @@
+# matricule;matiere;semestre;devoir;examen
+ET001;Java;Semestre 1;14.00;16.00
+ET001;Base de données;Semestre 1;12.00;13.50
+ET001;Réseaux;Semestre 1;9.00;11.00
+ET001;Programmation;Semestre 1;15.00;17.00
+ET002;Java;Semestre 1;10.00;12.00
+ET002;Base de données;Semestre 1;8.00;9.50
+ET002;Réseaux;Semestre 1;13.00;14.00
+ET003;Java;Semestre 1;16.00;15.00
