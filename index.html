@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GestionNotes</title>
+<style>
+:root{--navy:#13224a;--navy2:#1d3269;--gold:#c9a04a;--bg:#f3f5fa;--card:#fff;--txt:#17203a;--mut:#63708f;--line:#dfe4ef;--ok:#1f8a5b;--bad:#c93a3a;--warn:#c98a1a}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+h1,h2,h3,.brand{font-family:Georgia,"Times New Roman",serif;margin:0}
+button,input,select,textarea{font:inherit}
+.hide{display:none!important}
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 85% 20%,#2a468c 0,transparent 45%),linear-gradient(160deg,#0d1836,var(--navy))}
+.box{background:var(--card);width:100%;max-width:400px;border-radius:14px;padding:34px 30px;box-shadow:0 20px 60px #0006;text-align:center}
+.logo{width:68px;height:68px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:grid;place-items:center;margin:0 auto 12px;font-size:30px}
+.box h1{font-size:26px;letter-spacing:.06em;color:var(--navy)}
+.box p{color:var(--mut);margin:4px 0 20px}
+label{display:block;text-align:left;font-weight:600;font-size:13px;margin:12px 0 5px;color:var(--navy)}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--txt)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:-1px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400;color:var(--mut);margin-top:10px}
+.chk input{width:auto}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--navy2)}
+.btn.gold{background:var(--gold);color:#241a05}
+.btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--line)}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn.del{background:#fff;color:var(--bad);border:1px solid #efc4c4}
+.btn.full{width:100%;margin-top:18px;padding:12px}
+.demo{margin-top:16px;font-size:12.5px;color:var(--mut)}
+.err{color:var(--bad);font-size:13px;min-height:18px;margin-top:10px}
+/* app */
+header{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:5}
+.brand{font-size:19px;display:flex;gap:10px;align-items:center}
+.who{display:flex;gap:14px;align-items:center;font-size:14px}
+.who small{display:block;color:#b9c3e0;font-size:12px}
+main{max-width:1050px;margin:0 auto;padding:22px 16px 60px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;padding:10px 16px;cursor:pointer;color:var(--mut);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--navy);border-color:var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.card h2{font-size:19px;color:var(--navy);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.grid label{margin-top:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:8px 10px;border-bottom:2px solid var(--line)}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td input{width:76px;text-align:center;padding:7px}
+td input.bad{border-color:var(--bad);background:#fdeeee}
+.acts{display:flex;gap:6px}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.pill.ok{background:#dff3ea;color:var(--ok)}.pill.no{background:#fbe3e3;color:var(--bad)}.pill.w{background:#fdf0d5;color:var(--warn)}
+.profile{display:flex;gap:16px;align-items:center}
+.av{width:64px;height:64px;border-radius:50%;background:var(--navy);color:var(--gold);display:grid;place-items:center;font:700 24px Georgia,serif;flex:none}
+.stat{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+.stat div{flex:1;min-width:150px;background:var(--bg);border-radius:10px;padding:12px 16px}
+.stat b{display:block;font:700 26px Georgia,serif;color:var(--navy)}
+.stat span{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.empty{color:var(--mut);text-align:center;padding:22px}
+.rec{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+.rec .m{color:var(--mut);font-size:12.5px;margin-bottom:4px}
+.rec .r{margin-top:8px;padding:8px 10px;background:#eef3ff;border-left:3px solid var(--navy2);border-radius:4px;font-size:14px}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
+@media(max-width:560px){header{padding:10px 12px}.who small{display:none}.card{padding:14px}}
+</style>
+</head>
+<body>
+<section id="login">
+  <div class="box">
+    <div class="logo">🎓</div>
+    <h1>CONNEXION</h1>
+    <p>Application de gestion des notes scolaires</p>
+    <label for="lg">Login</label><input id="lg" autocomplete="username">
+    <label for="pw">Mot de passe</label><input id="pw" type="password" autocomplete="current-password">
+    <label class="chk"><input type="checkbox" id="sp"> Afficher le mot de passe</label>
+    <button class="btn full" id="go">SE CONNECTER</button>
+    <div class="err" id="err"></div>
+    <div class="demo">Professeur : prof / 1234 &nbsp;·&nbsp; Étudiant : etu / 1234</div>
+  </div>
+</section>
+
+<div id="app" class="hide">
+  <header>
+    <div class="brand">🎓 GestionNotes</div>
+    <div class="who"><div><span id="wn"></span><small id="wr"></small></div><button class="btn gold sm" id="out">Déconnexion</button></div>
+  </header>
+  <main id="main"></main>
+</div>
+<div id="toast"></div>
+
+<script>
+const SEM=["Semestre 1","Semestre 2"];
+const E=[
+ {n:"Institut Supérieur d'Informatique",v:"Thiès",c:[
+  {n:"Licence 2 Informatique",m:["Java","Base de données","Réseaux","Programmation"],e:[["ET001","Ndiaye","Awa"],["ET002","Diop","Moussa"],["ET003","Sow","Fatou"],["ET004","Fall","Cheikh"],["ET005","Ba","Aminata"],["ET006","Sarr","Ibrahima"]]},
+  {n:"Licence 3 Informatique",m:["Génie logiciel","Sécurité informatique","Intelligence artificielle","Projet tutoré"],e:[["ET011","Ndoye","Mariama"],["ET012","Thiam","Abdoulaye"],["ET013","Sy","Khadija"]]}]},
+ {n:"École Supérieure de Gestion",v:"Dakar",c:[
+  {n:"Licence 1 Gestion",m:["Comptabilité","Marketing","Économie","Statistiques"],e:[["ET101","Faye","Khady"],["ET102","Mbaye","Pape"],["ET103","Diagne","Ndeye"]]}]},
+ {n:"Lycée Excellence",v:"Thiès",c:[
+  {n:"Terminale S2",m:["Mathématiques","Physique-Chimie","SVT","Français"],e:[["ET201","Cissé","Aliou"],["ET202","Seck","Rokhaya"],["ET203","Camara","Modou"]]}]}
+];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+// stockage (localStorage, avec repli mémoire)
+let DB={notes:{},recs:[]};
+try{const s=localStorage.getItem("gestionnotes");if(s)DB=JSON.parse(s)}catch(e){}
+const save=()=>{try{localStorage.setItem("gestionnotes",JSON.stringify(DB))}catch(e){}};
+const key=(mat,m,s)=>mat+"|"+m+"|"+s;
+const avg=(d,e)=>(d+e)/2;
+const valid=v=>v!==""&&!isNaN(v)&&+v>=0&&+v<=20;
+const mention=m=>m<10?"Insuffisant":m<12?"Passable":m<14?"Assez bien":m<16?"Bien":"Très bien";
+const all=[];E.forEach(ec=>ec.c.forEach(cl=>cl.e.forEach(x=>all.push({mat:x[0],nom:x[1],pre:x[2],ecole:ec.n,classe:cl,cn:cl.n}))));
+function toast(t){const o=$("#toast");o.textContent=t;o.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>o.classList.remove("on"),2200)}
+let user=null;
+
+// connexion
+$("#sp").onchange=e=>$("#pw").type=e.target.checked?"text":"password";
+[$("#lg"),$("#pw")].forEach(i=>i.onkeydown=e=>{if(e.key==="Enter")login()});
+$("#go").onclick=login;
+function login(){
+  const l=$("#lg").value.trim().toLowerCase(),p=$("#pw").value;
+  if(p!=="1234"){return $("#err").textContent="Login ou mot de passe incorrect."}
+  if(l==="prof")user={role:"prof",nom:"Ibrahima Diallo",info:"Professeur · Informatique"};
+  else{const s=all.find(x=>x.mat.toLowerCase()===l||(l==="etu"&&x.mat==="ET001"));
+    if(!s)return $("#err").textContent="Login ou mot de passe incorrect.";
+    user={role:"etu",nom:s.pre+" "+s.nom,info:"Étudiant · "+s.mat,s}}
+  $("#err").textContent="";$("#login").classList.add("hide");$("#app").classList.remove("hide");
+  $("#wn").textContent=user.nom;$("#wr").textContent=user.info;
+  user.role==="prof"?prof():etu();
+}
+$("#out").onclick=()=>{user=null;$("#app").classList.add("hide");$("#login").classList.remove("hide");$("#pw").value=""};
+
+// ===== PROFESSEUR =====
+let F={e:0,c:0,m:0,s:0,q:"",g:false,tab:"notes"};
+function prof(){
+  const pend=DB.recs.filter(r=>!r.rep).length;
+  $("#main").innerHTML=`<div class="tabs"><button class="tab ${F.tab==="notes"?"on":""}" data-t="notes">Saisie des notes</button><button class="tab ${F.tab==="rec"?"on":""}" data-t="rec">Réclamations${pend?` <span class="pill w">${pend}</span>`:""}</button></div><div id="pv"></div>`;
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{F.tab=b.dataset.t;prof()});
+  F.tab==="notes"?profNotes():profRec();
+}
+function profNotes(){
+  const ec=E[F.e],cl=ec.c[F.c]||ec.c[0];
+  $("#pv").innerHTML=`<div class="card"><h2>Filtres</h2><div class="grid">
+   <div><label>École</label><select id="fe">${E.map((x,i)=>`<option value="${i}" ${i==F.e?"selected":""}>${esc(x.n)}</option>`).join("")}</select></div>
+   <div><label>Classe</label><select id="fc">${ec.c.map((x,i)=>`<option value="${i}" ${i==F.c?"selected":""}>${esc(x.n)}</option>`).join("")}</select></div>
+   <div><label>Matière</label><select id="fm">${cl.m.map((x,i)=>`<option value="${i}" ${i==F.m?"selected":""}>${esc(x)}</option>`).join("")}</select></div>
+   <div><label>Semestre</label><select id="fs">${SEM.map((x,i)=>`<option value="${i}" ${i==F.s?"selected":""}>${x}</option>`).join("")}</select></div>
+  </div><label>Rechercher un étudiant</label><input id="fq" placeholder="Nom, prénom ou matricule…" value="${esc(F.q)}">
+  <label class="chk"><input type="checkbox" id="fg" ${F.g?"checked":""}> Recherche globale (toutes les écoles)</label></div>
+  <div class="card"><h2 id="th"></h2><div class="tw"><table><thead><tr><th>Matricule</th><th>Étudiant</th><th>Devoir</th><th>Examen</th><th>Moyenne</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
+  ["fe","fc","fm","fs"].forEach(id=>$("#"+id).onchange=e=>{const v=+e.target.value;
+    if(id==="fe"){F.e=v;F.c=0;F.m=0}else if(id==="fc"){F.c=v;F.m=0}else if(id==="fm")F.m=v;else F.s=v;profNotes()});
+  $("#fq").oninput=e=>{F.q=e.target.value;rows()};$("#fg").onchange=e=>{F.g=e.target.checked;rows()};
+  rows();
+}
+function rows(){
+  const ec=E[F.e],cl=ec.c[F.c],mat=cl.m[F.m],sem=SEM[F.s],q=norm(F.q.trim());
+  let list=F.g&&q?all:all.filter(x=>x.classe===cl);
+  if(q)list=list.filter(x=>norm(x.nom+" "+x.pre+" "+x.mat).includes(q));
+  $("#th").textContent=(F.g&&q?"Résultats globaux":cl.n+" — "+mat)+" · "+sem;
+  $("#tb").innerHTML=list.length?list.map(x=>{
+    const mm=F.g&&q?x.classe.m[0]:mat,n=DB.notes[key(x.mat,mm,sem)];
+    return `<tr data-m="${x.mat}" data-mm="${esc(mm)}"><td>${x.mat}</td><td>${esc(x.pre)} ${esc(x.nom)}${F.g&&q?`<br><small style="color:var(--mut)">${esc(x.ecole)} · ${esc(x.cn)}</small>`:""}</td>
+    <td><input class="d" inputmode="decimal" value="${n?n.d:""}" placeholder="/20"></td><td><input class="x" inputmode="decimal" value="${n?n.e:""}" placeholder="/20"></td>
+    <td class="mo">${n?avg(n.d,n.e).toFixed(2):"—"}</td>
+    <td><div class="acts"><button class="btn sm sv">Enregistrer</button>${n?`<button class="btn sm del dl">Suppr.</button>`:""}</div></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Aucun étudiant trouvé.</td></tr>`;
+  document.querySelectorAll("#tb tr[data-m]").forEach(tr=>{
+    const d=tr.querySelector(".d"),x=tr.querySelector(".x"),mo=tr.querySelector(".mo");
+    const chk=()=>{d.value=d.value.replace(",",".");x.value=x.value.replace(",",".");
+      d.classList.toggle("bad",d.value!==""&&!valid(d.value));x.classList.toggle("bad",x.value!==""&&!valid(x.value));
+      mo.textContent=valid(d.value)&&valid(x.value)?avg(+d.value,+x.value).toFixed(2):"—"};
+    d.oninput=x.oninput=chk;
+    tr.querySelector(".sv").onclick=()=>{
+      if(!valid(d.value)||!valid(x.value)){chk();d.classList.toggle("bad",!valid(d.value));x.classList.toggle("bad",!valid(x.value));return toast("Notes invalides : entrez des nombres entre 0 et 20.")}
+      DB.notes[key(tr.dataset.m,tr.dataset.mm,sem)]={d:+d.value,e:+x.value};save();toast("Note enregistrée ✔");rows()};
+    const dl=tr.querySelector(".dl");
+    if(dl)dl.onclick=()=>{if(confirm("Supprimer cette note ?")){delete DB.notes[key(tr.dataset.m,tr.dataset.mm,sem)];save();toast("Note supprimée");rows()}};
+  });
+}
+function profRec(){
+  const l=[...DB.recs].reverse();
+  $("#pv").innerHTML=`<div class="card"><h2>Réclamations des étudiants</h2>${l.length?l.map(r=>`<div class="rec"><div class="m">${esc(r.nom)} (${r.mat}) · ${esc(r.mm)} · ${r.sem} · ${r.date} <span class="pill ${r.rep?"ok":"w"}">${r.rep?"Traitée":"En attente"}</span></div>${esc(r.msg)}
+   ${r.rep?`<div class="r"><b>Réponse :</b> ${esc(r.rep)}</div>`:`<textarea rows="2" placeholder="Votre réponse…" data-i="${r.id}" style="margin-top:8px"></textarea><button class="btn sm" data-r="${r.id}" style="margin-top:6px">Répondre et marquer traitée</button>`}</div>`).join(""):`<div class="empty">Aucune réclamation reçue.</div>`}</div>`;
+  document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{
+    const t=document.querySelector(`textarea[data-i="${b.dataset.r}"]`).value.trim();
+    if(!t)return toast("Écrivez une réponse.");
+    DB.recs.find(r=>r.id==b.dataset.r).rep=t;save();toast("Réclamation traitée ✔");prof()});
+}
+
+// ===== ÉTUDIANT =====
+let ES=0;
+function etu(){
+  const s=user.s,sem=SEM[ES],cl=s.classe;
+  let tot=0,cnt=0;
+  const lines=cl.m.map(m=>{const n=DB.notes[key(s.mat,m,sem)];if(n){tot+=avg(n.d,n.e);cnt++}
+    return `<tr><td>${esc(m)}</td><td>${n?n.d.toFixed(2):"—"}</td><td>${n?n.e.toFixed(2):"—"}</td><td><b>${n?avg(n.d,n.e).toFixed(2):"—"}</b></td><td>${n?`<span class="pill ${avg(n.d,n.e)>=10?"ok":"no"}">${avg(n.d,n.e)>=10?"Validé":"Non validé"}</span>`:""}</td></tr>`}).join("");
+  const g=cnt?tot/cnt:null,mine=DB.recs.filter(r=>r.mat===s.mat).reverse();
+  $("#main").innerHTML=`<div class="card profile"><div class="av">${s.pre[0]}${s.nom[0]}</div><div><h2 style="margin:0">${esc(s.pre)} ${esc(s.nom)}</h2><div style="color:var(--mut)">${s.mat} · ${esc(cl.n)} · ${esc(s.ecole)}</div></div></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="margin:0">Mes notes</h2><select id="es" style="width:auto">${SEM.map((x,i)=>`<option value="${i}" ${i==ES?"selected":""}>${x}</option>`).join("")}</select></div>
+  <div class="tw" style="margin-top:12px"><table><thead><tr><th>Matière</th><th>Devoir</th><th>Examen</th><th>Moyenne</th><th></th></tr></thead><tbody>${lines}</tbody></table></div>
+  <div class="stat"><div><b>${g!==null?g.toFixed(2)+" / 20":"—"}</b><span>Moyenne générale</span></div><div><b style="font-size:20px;padding-top:6px">${g!==null?mention(g):"—"}</b><span>Mention</span></div><div><b>${cnt} / ${cl.m.length}</b><span>Matières notées</span></div></div></div>
+  <div class="card"><h2>Envoyer une réclamation</h2><div class="grid"><div><label>Matière</label><select id="rm">${cl.m.map(m=>`<option>${esc(m)}</option>`).join("")}</select></div><div><label>Semestre</label><select id="rs">${SEM.map((x,i)=>`<option ${i==ES?"selected":""}>${x}</option>`).join("")}</select></div></div>
+  <label>Message</label><textarea id="rt" rows="3" placeholder="Expliquez votre réclamation…"></textarea><button class="btn" id="rb" style="margin-top:12px">Envoyer</button></div>
+  <div class="card"><h2>Mes réclamations</h2>${mine.length?mine.map(r=>`<div class="rec"><div class="m">${esc(r.mm)} · ${r.sem} · ${r.date} <span class="pill ${r.rep?"ok":"w"}">${r.rep?"Traitée":"En attente"}</span></div>${esc(r.msg)}${r.rep?`<div class="r"><b>Réponse du professeur :</b> ${esc(r.rep)}</div>`:""}</div>`).join(""):`<div class="empty">Aucune réclamation envoyée.</div>`}</div>`;
+  $("#es").onchange=e=>{ES=+e.target.value;etu()};
+  $("#rb").onclick=()=>{const t=$("#rt").value.trim();if(t.length<5)return toast("Message trop court.");
+    DB.recs.push({id:Date.now(),mat:s.mat,nom:s.pre+" "+s.nom,mm:$("#rm").value,sem:$("#rs").value,msg:t,date:new Date().toLocaleDateString("fr-FR"),rep:""});
+    save();toast("Réclamation envoyée ✔");etu()};
+}
+</script>
+</body>
+</html>
